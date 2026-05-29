@@ -12,7 +12,17 @@ export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: "pg", usePlural: true, transaction: true }),
-	emailAndPassword: { enabled: true, requireEmailVerification: true },
+	emailAndPassword: {
+		enabled: true,
+		requireEmailVerification: true,
+		sendResetPassword: async ({ user, url }) => {
+			void sendEmail({
+				receiver: user.email,
+				subject: "Reset your password",
+				text: `Click the link to reset your password: ${url}`
+			});
+		}
+	},
 	emailVerification: {
 		sendOnSignUp: true,
 		sendVerificationEmail: async ({ user, url }) => {
