@@ -13,7 +13,13 @@ import {
 	jsonb
 } from "drizzle-orm/pg-core";
 
-export const userRoleEnum = pgEnum("role", ["user", "employee", "admin"]);
+export const userRoleEnum = pgEnum("role", [
+	"customer",
+	"support_agent",
+	"compliance_officer",
+	"branch_manager",
+	"admin"
+]);
 
 export const auditActionEnum = pgEnum("audit_action", [
 	"CREATE",
@@ -199,7 +205,7 @@ export const users = pgTable("users", {
 		.defaultNow()
 		.$onUpdate(() => new Date())
 		.notNull(),
-	role: userRoleEnum("role").default("user").notNull(),
+	role: userRoleEnum("role").default("customer").notNull(),
 	banned: boolean("banned").default(false),
 	banReason: text("ban_reason"),
 	banExpires: timestamp("ban_expires"),
