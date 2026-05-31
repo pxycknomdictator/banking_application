@@ -5,7 +5,15 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { getRequestEvent } from "$app/server";
 import { sendEmail } from "./email/resend";
-import { admin, username, lastLoginMethod } from "better-auth/plugins";
+import { admin as adminPlugin, username, lastLoginMethod } from "better-auth/plugins";
+import {
+	ac,
+	admin,
+	branch_manager,
+	compliance_officer,
+	support_agent,
+	customer
+} from "$lib/permissions";
 
 export const auth = betterAuth({
 	appName: "banking_application",
@@ -44,7 +52,17 @@ export const auth = betterAuth({
 		google: { clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET },
 		microsoft: { clientId: env.MICROSOFT_CLIENT_ID, clientSecret: env.MICROSOFT_CLIENT_SECRET }
 	},
-	plugins: [admin(), username(), lastLoginMethod(), sveltekitCookies(getRequestEvent)]
+	plugins: [
+		adminPlugin({
+			ac,
+			roles: { admin, branch_manager, compliance_officer, support_agent, customer },
+			adminRoles: ["admin", "branch_manager"],
+			defaultRole: "customer"
+		}),
+		username(),
+		lastLoginMethod(),
+		sveltekitCookies(getRequestEvent)
+	]
 });
 
 export type User = typeof auth.$Infer.Session.user;
