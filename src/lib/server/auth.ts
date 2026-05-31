@@ -12,6 +12,12 @@ export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: "pg", usePlural: true, transaction: true }),
+	account: {
+		accountLinking: {
+			enabled: true,
+			trustedProviders: ["email-password", "google", "github", "microsoft"]
+		}
+	},
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: true,
