@@ -199,7 +199,7 @@ export const users = pgTable("users", {
 		.defaultNow()
 		.$onUpdate(() => new Date())
 		.notNull(),
-	role: userRoleEnum().default("user").notNull(),
+	role: userRoleEnum("role").default("user").notNull(),
 	banned: boolean("banned").default(false),
 	banReason: text("ban_reason"),
 	banExpires: timestamp("ban_expires"),
@@ -343,8 +343,8 @@ export const branches = pgTable(
 
 export const cardProviders = pgTable("card_providers", {
 	id: text("id").primaryKey(),
-	providerName: cardProviderNameEnum().notNull().unique(),
-	providerCode: cardProviderCodeEnum().notNull().unique(),
+	providerName: cardProviderNameEnum("provider_name").notNull().unique(),
+	providerCode: cardProviderCodeEnum("provider_code").notNull().unique(),
 	website: varchar("website", { length: 256 }),
 	logoUrl: text("logo_url"),
 	contactEmail: varchar("contact_email", { length: 256 }),
@@ -370,8 +370,8 @@ export const bankAccounts = pgTable(
 		accountHolderName: varchar("account_holder_name", { length: 256 }).notNull(),
 		accountNumber: varchar("account_number", { length: 50 }).notNull().unique(),
 		ibanNumber: varchar("iban_number", { length: 50 }).notNull().unique(),
-		accountStatus: bankAccountStatusEnum().default("active").notNull(),
-		accountType: bankAccountTypeEnum().default("current").notNull(),
+		accountStatus: bankAccountStatusEnum("account_status").default("active").notNull(),
+		accountType: bankAccountTypeEnum("account_type").default("current").notNull(),
 		currency: currencyEnum("currency").default("PKR").notNull(),
 		balance: numeric("balance", { precision: 18, scale: 2 }).notNull().default("0"),
 		minimumBalance: numeric("minimum_balance", { precision: 18, scale: 2 })
