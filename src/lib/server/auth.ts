@@ -46,3 +46,6 @@ export const auth = betterAuth({
 	},
 	plugins: [admin(), username(), lastLoginMethod(), sveltekitCookies(getRequestEvent)]
 });
+
+export type User = typeof auth.$Infer.Session.user;
+export type Session = typeof auth.$Infer.Session.session;
