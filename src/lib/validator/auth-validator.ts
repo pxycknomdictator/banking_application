@@ -23,3 +23,7 @@ export const signupSchema = loginSchema
 			});
 		}
 	});
+
+export type EmailSchema = z.infer<typeof emailSchema>;
+export type LoginSchema = z.infer<typeof loginSchema>;
+export type SignupSchema = z.infer<typeof signupSchema>;
