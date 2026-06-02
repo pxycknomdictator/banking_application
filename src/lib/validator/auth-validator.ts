@@ -15,7 +15,7 @@ export const signupSchema = loginSchema
 		password_confirm: z.string().min(8, { error: "Confirm Password must be 8 characters" })
 	})
 	.superRefine(({ password, password_confirm }, ctx) => {
-		if (password !== password_confirm) {
+		if (password_confirm.length >= 8 && password !== password_confirm) {
 			ctx.addIssue({
 				code: "custom",
 				message: "Password not matched",
