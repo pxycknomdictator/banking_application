@@ -4,8 +4,13 @@ export const emailSchema = z.strictObject({
 	email: z.email({ error: "Invalid email address" })
 });
 
-export const loginSchema = emailSchema.safeExtend({
+export const passwordSchema = z.strictObject({
 	password: z.string().min(8, { error: "Password must be 8 characters" })
+});
+
+export const loginSchema = z.strictObject({
+	...emailSchema.shape,
+	...passwordSchema.shape
 });
 
 export const signupSchema = loginSchema
@@ -25,5 +30,6 @@ export const signupSchema = loginSchema
 	});
 
 export type EmailSchema = z.infer<typeof emailSchema>;
+export type PasswordSchema = z.infer<typeof passwordSchema>;
 export type LoginSchema = z.infer<typeof loginSchema>;
 export type SignupSchema = z.infer<typeof signupSchema>;
