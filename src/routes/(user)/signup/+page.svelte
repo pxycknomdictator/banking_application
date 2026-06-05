@@ -81,6 +81,11 @@
 				</div>
 				<button type="submit">Signup</button>
 			</section>
+			<div>
+				<button type="button">GitHub</button>
+				<button type="button">Google</button>
+				<button type="button">Microsoft</button>
+			</div>
 		</form>
 	</section>
 </main>
