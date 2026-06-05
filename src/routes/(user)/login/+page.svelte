@@ -27,7 +27,12 @@
 			</div>
 
 			<div>
-				<label for="password">Password:</label>
+				<div>
+					<label for="password">Password:</label>
+					<span>
+						<a href={resolve("/forget-password")}>forget-password?</a>
+					</span>
+				</div>
 				<div>
 					<input
 						type="password"
