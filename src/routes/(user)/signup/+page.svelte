@@ -14,10 +14,10 @@
 
 <main>
 	<section>
-		<h1>Signup page</h1>
+		<h1>Signup</h1>
 		<form action="?/signup" method="post" use:enhance>
 			<div>
-				<label for="name">Name:</label>
+				<label for="name">Name</label>
 				<div>
 					<input type="text" name="name" id="name" bind:value={$form.name} />
 					{#if $errors.name}
@@ -27,7 +27,7 @@
 			</div>
 
 			<div>
-				<label for="username">Username:</label>
+				<label for="username">Username</label>
 				<div>
 					<input type="text" name="username" id="username" bind:value={$form.username} />
 					{#if $errors.username}
@@ -37,7 +37,7 @@
 			</div>
 
 			<div>
-				<label for="email">Email:</label>
+				<label for="email">Email Address</label>
 				<div>
 					<input type="email" name="email" id="email" bind:value={$form.email} />
 					{#if $errors.email}
@@ -47,7 +47,7 @@
 			</div>
 
 			<div>
-				<label for="password">Password:</label>
+				<label for="password">Password</label>
 				<div>
 					<input
 						type="password"
@@ -62,7 +62,7 @@
 			</div>
 
 			<div>
-				<label for="password_confirm">Confirm Password:</label>
+				<label for="password_confirm">Confirm Password</label>
 				<div>
 					<input
 						type="password"
@@ -77,7 +77,7 @@
 			</div>
 			<section>
 				<div>
-					<span>Already have a account? <a href={resolve("/login")}>Login</a></span>
+					<span>Already have an account? <a href={resolve("/login")}>Login</a></span>
 				</div>
 				<button type="submit">Signup</button>
 			</section>

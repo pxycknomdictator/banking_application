@@ -14,10 +14,10 @@
 
 <main>
 	<section>
-		<h1>Login page</h1>
+		<h1>Login</h1>
 		<form action="?/login" method="post" use:enhance>
 			<div>
-				<label for="email">Email:</label>
+				<label for="email">Email Address</label>
 				<div>
 					<input type="email" name="email" id="email" bind:value={$form.email} />
 					{#if $errors.email}
@@ -28,7 +28,7 @@
 
 			<div>
 				<div>
-					<label for="password">Password:</label>
+					<label for="password">Password</label>
 					<span>
 						<a href={resolve("/forget-password")}>forget-password?</a>
 					</span>
@@ -48,7 +48,7 @@
 
 			<section>
 				<div>
-					<span>Don't have a account? <a href={resolve("/signup")}>Signup</a></span>
+					<span>Don't have an account? <a href={resolve("/signup")}>Signup</a></span>
 				</div>
 				<button type="submit">Login</button>
 			</section>
