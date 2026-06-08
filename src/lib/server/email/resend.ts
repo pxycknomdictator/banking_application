@@ -1,5 +1,4 @@
 import { Resend } from "resend";
-import { error } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 
 if (!env.RESEND_API_KEY) throw new Error("RESEND_API_KEY is not set");
@@ -22,12 +21,14 @@ export async function sendEmail({ receiver, subject, text }: Email) {
 		});
 
 		if (res.error) {
-			return error(res.error.statusCode as number, { message: res.error.message });
+			console.error("Resend error:", res.error.message);
+			return null;
 		}
 
 		return res.data;
 	} catch (e) {
 		const errors = e as Error;
-		return error(500, { message: errors.message || "unexpected error" });
+		console.error("sendEmail failed:", errors.message || "unexpected error");
+		return null;
 	}
 }
