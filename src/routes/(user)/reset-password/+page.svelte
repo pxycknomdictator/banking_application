@@ -4,13 +4,19 @@
 	import { resetPasswordSchema } from "$lib/validator/auth-validator";
 	import { superForm } from "sveltekit-superforms";
 	import { zod4Client } from "sveltekit-superforms/adapters";
+	import { goto } from "$app/navigation";
 
 	let { data } = $props();
 	const token = page.url.searchParams.get("token");
 
 	// svelte-ignore state_referenced_locally
 	const { form, errors, enhance } = superForm(data.form, {
-		validators: zod4Client(resetPasswordSchema)
+		validators: zod4Client(resetPasswordSchema),
+		async onResult({ result }) {
+			if (result.type === "success") {
+				await goto("/login", { replaceState: true });
+			}
+		}
 	});
 </script>
 

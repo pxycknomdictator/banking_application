@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { resolve } from "$app/paths";
 	import { loginSchema } from "$lib/validator/auth-validator";
 	import { superForm } from "sveltekit-superforms";
@@ -8,7 +9,12 @@
 
 	// svelte-ignore state_referenced_locally
 	const { form, errors, enhance } = superForm(data.login, {
-		validators: zod4Client(loginSchema)
+		validators: zod4Client(loginSchema),
+		async onResult({ result }) {
+			if (result.type === "success") {
+				await goto("/dashboard", { replaceState: true });
+			}
+		}
 	});
 </script>
 
