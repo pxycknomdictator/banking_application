@@ -31,6 +31,8 @@ export const actions: Actions = {
 				},
 				headers: request.headers
 			});
+
+			return message(form, "Login successful! Welcome back");
 		} catch (error) {
 			if (error instanceof APIError) {
 				if (error.body?.code === "INVALID_EMAIL_OR_PASSWORD") {
@@ -38,7 +40,5 @@ export const actions: Actions = {
 				}
 			}
 		}
-
-		throw redirect(302, "/dashboard");
 	}
 };

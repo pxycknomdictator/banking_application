@@ -33,6 +33,11 @@ export const actions: Actions = {
 				},
 				headers: request.headers
 			});
+
+			return message(
+				form,
+				"Account created! Please check your email to verify your account."
+			);
 		} catch (error) {
 			if (error instanceof APIError) {
 				if (error.body?.code === "USERNAME_IS_ALREADY_TAKEN") {
