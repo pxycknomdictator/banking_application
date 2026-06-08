@@ -15,7 +15,8 @@ export const confirmPasswordSchema = z.strictObject({
 export const resetPasswordSchema = z
 	.strictObject({
 		...passwordSchema.shape,
-		...confirmPasswordSchema.shape
+		...confirmPasswordSchema.shape,
+		token: z.string()
 	})
 	.superRefine(({ password, password_confirm }, ctx) => {
 		if (password_confirm.length >= 8 && password !== password_confirm) {

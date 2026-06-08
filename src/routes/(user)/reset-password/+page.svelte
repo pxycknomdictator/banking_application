@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import { resolve } from "$app/paths";
 	import { resetPasswordSchema } from "$lib/validator/auth-validator";
 	import { superForm } from "sveltekit-superforms";
 	import { zod4Client } from "sveltekit-superforms/adapters";
 
 	let { data } = $props();
+	const token = page.url.searchParams.get("token");
 
 	// svelte-ignore state_referenced_locally
 	const { form, errors, enhance } = superForm(data.form, {
@@ -16,6 +18,10 @@
 	<section>
 		<h1>Reset Your Password</h1>
 		<form action="?/reset_password" method="post" use:enhance>
+			<div>
+				<input type="text" value={token} hidden name="token" id="token" />
+			</div>
+
 			<div>
 				<label for="password">New Password</label>
 				<div>
