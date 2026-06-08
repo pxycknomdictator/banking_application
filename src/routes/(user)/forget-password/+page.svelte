@@ -8,7 +8,8 @@
 
 	// svelte-ignore state_referenced_locally
 	const { form, errors, enhance } = superForm(data.form, {
-		validators: zod4Client(emailSchema)
+		validators: zod4Client(emailSchema),
+		resetForm: false
 	});
 </script>
 
@@ -34,7 +35,7 @@
 			</section>
 			<div>
 				<span>Didn't get the email?</span>
-				<button type="button">Resend Email</button>
+				<button formaction="?/forget_password" type="submit">Resend Email</button>
 			</div>
 		</form>
 	</section>
