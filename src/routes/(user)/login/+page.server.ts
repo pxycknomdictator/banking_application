@@ -6,7 +6,11 @@ import { auth } from "$lib/server/auth";
 import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	if (locals.user && locals.user.emailVerified) {
+		throw redirect(302, "/dashboard");
+	}
+
 	const login = await superValidate(zod4(loginSchema));
 	return { login };
 };
