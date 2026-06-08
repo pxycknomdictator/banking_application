@@ -3,8 +3,13 @@ import { zod4 } from "sveltekit-superforms/adapters";
 import type { Actions, PageServerLoad } from "./$types";
 import { resetPasswordSchema } from "$lib/validator/auth-validator";
 import { auth } from "$lib/server/auth";
+import { redirect } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	if (locals.user && locals.user.emailVerified) {
+		throw redirect(302, "/dashboard");
+	}
+
 	const form = await superValidate(zod4(resetPasswordSchema));
 	return { form };
 };
