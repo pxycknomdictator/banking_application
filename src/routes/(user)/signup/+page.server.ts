@@ -29,7 +29,8 @@ export const actions: Actions = {
 					name: form.data.name,
 					username: form.data.username,
 					email: form.data.email,
-					password: form.data.password
+					password: form.data.password,
+					callbackURL: "/dashboard"
 				},
 				headers: request.headers
 			});
