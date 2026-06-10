@@ -5,6 +5,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { getRequestEvent } from "$app/server";
 import { sendEmail } from "./email/resend";
+import { generateUniqueUsername } from "./utils";
 import { admin as adminPlugin, username, lastLoginMethod } from "better-auth/plugins";
 import {
 	ac,
@@ -48,12 +49,30 @@ export const auth = betterAuth({
 		}
 	},
 	socialProviders: {
-		github: { clientId: env.GITHUB_CLIENT_ID, clientSecret: env.GITHUB_CLIENT_SECRET },
-		google: { clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET },
+		github: {
+			clientId: env.GITHUB_CLIENT_ID,
+			clientSecret: env.GITHUB_CLIENT_SECRET,
+			mapProfileToUser: async (profile) => ({
+				username: await generateUniqueUsername(profile.login)
+			})
+		},
+		google: {
+			clientId: env.GOOGLE_CLIENT_ID,
+			clientSecret: env.GOOGLE_CLIENT_SECRET,
+			mapProfileToUser: async (profile) => ({
+				username: await generateUniqueUsername(profile.given_name ?? profile.name)
+			})
+		},
 		microsoft: {
 			clientId: env.MICROSOFT_CLIENT_ID,
 			clientSecret: env.MICROSOFT_CLIENT_SECRET,
-			tenantId: env.MICROSOFT_TENANT_ID
+			tenantId: env.MICROSOFT_TENANT_ID,
+			mapProfileToUser: async (profile) => ({
+				username: await generateUniqueUsername(
+					profile.preferred_username?.split("@")[0] ?? profile.name
+				),
+				emailVerified: true
+			})
 		}
 	},
 	plugins: [
