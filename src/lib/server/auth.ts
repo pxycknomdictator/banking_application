@@ -21,6 +21,19 @@ export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: "pg", usePlural: true, transaction: true }),
+	rateLimit: {
+		enabled: true,
+		window: 60,
+		max: 20,
+		customRules: {
+			"/sign-up/email": { window: 60 * 60, max: 5 },
+			"/sign-in/email": { window: 60, max: 5 },
+			"/sign-in/social": { window: 60, max: 10 },
+			"/send-verification-email": { window: 60 * 60, max: 3 },
+			"/request-password-reset": { window: 60 * 60, max: 3 },
+			"/reset-password": { window: 60 * 60, max: 3 }
+		}
+	},
 	account: {
 		accountLinking: {
 			enabled: true,
