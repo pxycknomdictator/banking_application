@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { resolve } from "$app/paths";
+	import { authClient } from "$lib/auth-client";
 	import { signupSchema } from "$lib/validator/auth-validator";
 	import { superForm } from "sveltekit-superforms";
 	import { zod4Client } from "sveltekit-superforms/adapters";
@@ -16,6 +17,13 @@
 			}
 		}
 	});
+
+	type SocialProvider = "google" | "github" | "microsoft";
+
+	async function signupWithSocial(provider: SocialProvider) {
+		const { error } = await authClient.signIn.social({ provider, callbackURL: "/dashboard" });
+		if (error) console.error(error);
+	}
 </script>
 
 <main>
@@ -88,9 +96,11 @@
 				<button type="submit">Signup</button>
 			</section>
 			<div>
-				<button type="button">GitHub</button>
-				<button type="button">Google</button>
-				<button type="button">Microsoft</button>
+				<button type="button" onclick={() => signupWithSocial("github")}>GitHub</button>
+				<button type="button" onclick={() => signupWithSocial("google")}>Google</button>
+				<button type="button" onclick={() => signupWithSocial("microsoft")}
+					>Microsoft</button
+				>
 			</div>
 		</form>
 	</section>
