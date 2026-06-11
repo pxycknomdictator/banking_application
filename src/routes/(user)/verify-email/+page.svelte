@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { superForm } from "sveltekit-superforms";
 
 	let { data } = $props();
+
+	// svelte-ignore state_referenced_locally
+	const { enhance } = superForm(data.form);
 </script>
 
 <main>
@@ -15,6 +18,10 @@
 			</p>
 		</div>
 		<form action="?/resend_email" method="post" use:enhance>
+			<div>
+				<input type="email" value={data.email} hidden name="email" id="email" />
+			</div>
+
 			<button type="submit">Resend Verification Email</button>
 		</form>
 		<div>
