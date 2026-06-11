@@ -42,7 +42,8 @@ export const actions: Actions = {
 				body: {
 					email: form.data.email,
 					redirectTo: "http://localhost:5173/reset-password"
-				}
+				},
+				headers: request.headers
 			});
 
 			if (!data.status) {

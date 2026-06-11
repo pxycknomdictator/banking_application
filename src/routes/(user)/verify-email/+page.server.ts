@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	async resend_email({ locals }) {
+	async resend_email({ locals, request }) {
 		const user = locals.user;
 
 		if (!user) {
@@ -32,7 +32,8 @@ export const actions: Actions = {
 				body: {
 					email: user.email,
 					callbackURL: "/verify-email"
-				}
+				},
+				headers: request.headers
 			});
 		} catch (e) {
 			console.error("Resend verification error:", e);

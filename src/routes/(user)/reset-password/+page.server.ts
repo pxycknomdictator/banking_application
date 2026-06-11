@@ -27,7 +27,8 @@ export const actions: Actions = {
 				body: {
 					newPassword: form.data.password,
 					token: form.data.token
-				}
+				},
+				headers: request.headers
 			});
 
 			return message(form, "Password reset successful! You can now login.");
