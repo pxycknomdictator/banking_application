@@ -3,6 +3,7 @@ import { zod4 } from "sveltekit-superforms/adapters";
 import type { Actions, PageServerLoad } from "./$types";
 import { resetPasswordSchema } from "$lib/validator/auth-validator";
 import { auth } from "$lib/server/auth";
+import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -32,8 +33,14 @@ export const actions: Actions = {
 			});
 
 			return message(form, "Password reset successful! You can now login.");
-		} catch (e) {
-			console.error("Reset password error:", e);
+		} catch (error) {
+			if (error instanceof APIError) {
+				if (error.status === 429) {
+					return message(form, "Too many attempts. Try again in 1 hour.", {
+						status: 429
+					});
+				}
+			}
 			return message(form, "Invalid or expired reset link. Please request a new one.", {
 				status: 400
 			});

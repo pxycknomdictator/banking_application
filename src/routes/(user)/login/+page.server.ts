@@ -35,6 +35,12 @@ export const actions: Actions = {
 			return message(form, "Login successful! Welcome back");
 		} catch (error) {
 			if (error instanceof APIError) {
+				if (error.status === 429) {
+					return message(form, "Too many attempts. Try again in 1 minute.", {
+						status: 429
+					});
+				}
+
 				if (error.body?.code === "INVALID_EMAIL_OR_PASSWORD") {
 					return message(form, "invalid email or password", { status: 400 });
 				}

@@ -6,6 +6,7 @@ import { db } from "$lib/server/db";
 import { users } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "$lib/server/auth";
+import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -56,8 +57,14 @@ export const actions: Actions = {
 				form,
 				"Password reset link has been sent to your email. Please check your inbox."
 			);
-		} catch (e) {
-			console.error("Forget password error:", e);
+		} catch (error) {
+			if (error instanceof APIError) {
+				if (error.status === 429) {
+					return message(form, "Too many attempts. Try again in 1 hour.", {
+						status: 429
+					});
+				}
+			}
 			return message(form, "Something went wrong. Please try again later.", { status: 500 });
 		}
 	}

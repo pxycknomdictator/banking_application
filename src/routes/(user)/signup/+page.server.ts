@@ -41,6 +41,12 @@ export const actions: Actions = {
 			);
 		} catch (error) {
 			if (error instanceof APIError) {
+				if (error.status === 429) {
+					return message(form, "Too many attempts. Try again in 1 hour.", {
+						status: 429
+					});
+				}
+
 				if (error.body?.code === "USERNAME_IS_ALREADY_TAKEN") {
 					return message(form, "username is already taken", { status: 400 });
 				}

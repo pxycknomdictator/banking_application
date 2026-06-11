@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { auth } from "$lib/server/auth";
 import { emailSchema } from "$lib/validator/auth-validator";
 import { APIError } from "better-auth/api";
-import { superValidate } from "sveltekit-superforms";
+import { superValidate, message } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -41,8 +41,15 @@ export const actions: Actions = {
 				},
 				headers: request.headers
 			});
-		} catch (e) {
-			console.error("Resend verification error:", e);
+		} catch (error) {
+			if (error instanceof APIError) {
+				if (error.status === 429) {
+					return message(form, "Too many attempts. Try again in 1 hour.", {
+						status: 429
+					});
+				}
+			}
+			return message(form, "Failed to send email. Please try again later.", { status: 500 });
 		}
 	}
 };
