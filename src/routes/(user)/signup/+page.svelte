@@ -13,7 +13,7 @@
 		validators: zod4Client(signupSchema),
 		async onResult({ result }) {
 			if (result.type === "success") {
-				await goto("/verify-email", { replaceState: true });
+				await goto(resolve("/verify-email"), { replaceState: true });
 			}
 		}
 	});

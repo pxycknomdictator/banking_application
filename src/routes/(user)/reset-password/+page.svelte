@@ -14,7 +14,7 @@
 		validators: zod4Client(resetPasswordSchema),
 		async onResult({ result }) {
 			if (result.type === "success") {
-				await goto("/login", { replaceState: true });
+				await goto(resolve("/login"), { replaceState: true });
 			}
 		}
 	});

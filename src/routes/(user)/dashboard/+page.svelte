@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
 	import { authClient } from "$lib/auth-client";
 
 	let { data } = $props();
@@ -12,7 +13,7 @@
 			return;
 		}
 
-		await goto("/login", { replaceState: true, invalidateAll: true });
+		await goto(resolve("/login"), { replaceState: true, invalidateAll: true });
 	}
 </script>
 

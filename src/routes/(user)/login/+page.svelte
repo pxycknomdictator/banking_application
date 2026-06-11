@@ -13,7 +13,7 @@
 		validators: zod4Client(loginSchema),
 		async onResult({ result }) {
 			if (result.type === "success") {
-				await goto("/dashboard", { replaceState: true });
+				await goto(resolve("/dashboard"), { replaceState: true });
 			}
 		}
 	});
