@@ -5,11 +5,26 @@ import { resetPasswordSchema } from "$lib/validator/auth-validator";
 import { auth } from "$lib/server/auth";
 import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
+import { db } from "$lib/server/db";
+import { verifications } from "$lib/server/db/schema";
+import { and, eq, gt } from "drizzle-orm";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user && locals.user.emailVerified) {
 		throw redirect(302, "/dashboard");
 	}
+
+	const token = url.searchParams.get("token");
+	if (!token) throw redirect(302, "/forget-password");
+
+	const validToken = await db.query.verifications.findFirst({
+		where: and(
+			eq(verifications.identifier, `reset-password:${token}`),
+			gt(verifications.expiresAt, new Date())
+		)
+	});
+
+	if (!validToken) throw redirect(302, "/forget-password");
 
 	const form = await superValidate(zod4(resetPasswordSchema));
 	return { form };
