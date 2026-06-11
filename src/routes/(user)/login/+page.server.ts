@@ -27,7 +27,8 @@ export const actions: Actions = {
 			await auth.api.signInEmail({
 				body: {
 					email: form.data.email,
-					password: form.data.password
+					password: form.data.password,
+					rememberMe: form.data.rememberMe
 				},
 				headers: request.headers
 			});

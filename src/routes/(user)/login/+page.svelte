@@ -58,6 +58,15 @@
 						<small>{$errors.password}</small>
 					{/if}
 				</div>
+				<div>
+					<input
+						type="checkbox"
+						name="rememberMe"
+						id="rememberMe"
+						bind:checked={$form.rememberMe}
+					/>
+					<span>Remember me</span>
+				</div>
 			</div>
 
 			<section>

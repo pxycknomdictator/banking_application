@@ -30,7 +30,8 @@ export const resetPasswordSchema = z
 
 export const loginSchema = z.strictObject({
 	...emailSchema.shape,
-	...passwordSchema.shape
+	...passwordSchema.shape,
+	rememberMe: z.boolean().optional()
 });
 
 export const signupSchema = z
