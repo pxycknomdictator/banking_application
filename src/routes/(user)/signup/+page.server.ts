@@ -2,8 +2,6 @@ import { fail, message, superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
 import type { Actions, PageServerLoad } from "./$types";
 import { signupSchema } from "$lib/validator/auth-validator";
-import { auth } from "$lib/server/auth";
-import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -16,45 +14,46 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	async signup({ request }) {
+	async signup({ request, fetch }) {
 		const form = await superValidate(request, zod4(signupSchema));
 
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		try {
-			await auth.api.signUpEmail({
-				body: {
-					name: form.data.name,
-					username: form.data.username,
-					email: form.data.email,
-					password: form.data.password,
-					callbackURL: "/dashboard"
-				},
-				headers: request.headers
+		const response = await fetch("/api/auth/sign-up/email", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
+			},
+			body: JSON.stringify({
+				name: form.data.name,
+				username: form.data.username,
+				email: form.data.email,
+				password: form.data.password,
+				callbackURL: "/dashboard"
+			})
+		});
+
+		if (response.status === 429) {
+			const retryAfter = response.headers.get("X-Retry-After");
+			return message(form, `Too many attempts. Try again in ${retryAfter ?? 3600} seconds.`, {
+				status: 429
 			});
-
-			return message(
-				form,
-				"Account created! Please check your email to verify your account."
-			);
-		} catch (error) {
-			if (error instanceof APIError) {
-				if (error.status === 429) {
-					return message(form, "Too many attempts. Try again in 1 hour.", {
-						status: 429
-					});
-				}
-
-				if (error.body?.code === "USERNAME_IS_ALREADY_TAKEN") {
-					return message(form, "username is already taken", { status: 400 });
-				}
-
-				if (error.body?.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
-					return message(form, "email is already exists", { status: 400 });
-				}
-			}
 		}
+
+		if (!response.ok) {
+			const data = await response.json();
+			if (data?.code === "USERNAME_IS_ALREADY_TAKEN") {
+				return message(form, "Username is already taken.", { status: 400 });
+			}
+			if (data?.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
+				return message(form, "Email already exists.", { status: 400 });
+			}
+			return message(form, "Something went wrong. Please try again.", { status: 500 });
+		}
+
+		return message(form, "Account created! Please check your email to verify your account.");
 	}
 };

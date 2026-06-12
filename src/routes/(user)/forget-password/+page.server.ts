@@ -5,8 +5,6 @@ import { emailSchema } from "$lib/validator/auth-validator";
 import { db } from "$lib/server/db";
 import { users } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
-import { auth } from "$lib/server/auth";
-import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -19,53 +17,51 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	async forget_password({ request }) {
+	async forget_password({ request, fetch }) {
 		const form = await superValidate(request, zod4(emailSchema));
 
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		try {
-			const [isEmailExists] = await db
-				.select({ id: users.id })
-				.from(users)
-				.where(eq(users.email, form.data.email));
+		const [isEmailExists] = await db
+			.select({ id: users.id })
+			.from(users)
+			.where(eq(users.email, form.data.email));
 
-			if (!isEmailExists) {
-				return message(
-					form,
-					"If this email is registered, you will receive a password reset link shortly."
-				);
-			}
-
-			const data = await auth.api.requestPasswordReset({
-				body: {
-					email: form.data.email,
-					redirectTo: "http://localhost:5173/reset-password"
-				},
-				headers: request.headers
-			});
-
-			if (!data.status) {
-				return message(form, "Failed to send email. Please try again later.", {
-					status: 500
-				});
-			}
-
+		if (!isEmailExists) {
 			return message(
 				form,
-				"Password reset link has been sent to your email. Please check your inbox."
+				"If this email is registered, you will receive a password reset link shortly."
 			);
-		} catch (error) {
-			if (error instanceof APIError) {
-				if (error.status === 429) {
-					return message(form, "Too many attempts. Try again in 1 hour.", {
-						status: 429
-					});
-				}
-			}
-			return message(form, "Something went wrong. Please try again later.", { status: 500 });
 		}
+
+		const response = await fetch("/api/auth/request-password-reset", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
+			},
+			body: JSON.stringify({
+				email: form.data.email,
+				redirectTo: "http://localhost:5173/reset-password"
+			})
+		});
+
+		if (response.status === 429) {
+			const retryAfter = response.headers.get("X-Retry-After");
+			return message(form, `Too many attempts. Try again in ${retryAfter ?? 3600} seconds.`, {
+				status: 429
+			});
+		}
+
+		if (!response.ok) {
+			return message(form, "Failed to send email. Please try again later.", { status: 500 });
+		}
+
+		return message(
+			form,
+			"Password reset link has been sent to your email. Please check your inbox."
+		);
 	}
 };

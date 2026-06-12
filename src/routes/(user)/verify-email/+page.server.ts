@@ -1,21 +1,14 @@
 import { redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { auth } from "$lib/server/auth";
 import { emailSchema } from "$lib/validator/auth-validator";
-import { APIError } from "better-auth/api";
 import { superValidate, message } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = locals.user;
 
-	if (!user) {
-		redirect(302, "/login");
-	}
-
-	if (user.emailVerified) {
-		redirect(302, "/dashboard");
-	}
+	if (!user) throw redirect(302, "/login");
+	if (user.emailVerified) throw redirect(302, "/dashboard");
 
 	const [local, domain] = user.email.split("@");
 	const masked = local.slice(0, 2) + "*".repeat(local.length - 2);
@@ -25,30 +18,32 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	async resend_email({ locals, request }) {
+	async resend_email({ locals, request, fetch }) {
 		const form = await superValidate(request, zod4(emailSchema));
 		const user = locals.user;
 
-		if (!user) {
-			redirect(302, "/login");
+		if (!user) throw redirect(302, "/login");
+
+		const response = await fetch("/api/auth/send-verification-email", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
+			},
+			body: JSON.stringify({
+				email: user.email || form.data.email,
+				callbackURL: "/verify-email"
+			})
+		});
+
+		if (response.status === 429) {
+			const retryAfter = response.headers.get("X-Retry-After");
+			return message(form, `Too many attempts. Try again in ${retryAfter ?? 3600} seconds.`, {
+				status: 429
+			});
 		}
 
-		try {
-			await auth.api.sendVerificationEmail({
-				body: {
-					email: user.email || form.data.email,
-					callbackURL: "/verify-email"
-				},
-				headers: request.headers
-			});
-		} catch (error) {
-			if (error instanceof APIError) {
-				if (error.status === 429) {
-					return message(form, "Too many attempts. Try again in 1 hour.", {
-						status: 429
-					});
-				}
-			}
+		if (!response.ok) {
 			return message(form, "Failed to send email. Please try again later.", { status: 500 });
 		}
 	}

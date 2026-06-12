@@ -2,8 +2,6 @@ import { fail, message, superValidate } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
 import type { Actions, PageServerLoad } from "./$types";
 import { resetPasswordSchema } from "$lib/validator/auth-validator";
-import { auth } from "$lib/server/auth";
-import { APIError } from "better-auth/api";
 import { redirect } from "@sveltejs/kit";
 import { db } from "$lib/server/db";
 import { verifications } from "$lib/server/db/schema";
@@ -31,34 +29,38 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 };
 
 export const actions: Actions = {
-	async reset_password({ request }) {
+	async reset_password({ request, fetch }) {
 		const form = await superValidate(request, zod4(resetPasswordSchema));
 
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		try {
-			await auth.api.resetPassword({
-				body: {
-					newPassword: form.data.password,
-					token: form.data.token
-				},
-				headers: request.headers
-			});
+		const response = await fetch("/api/auth/reset-password", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
+			},
+			body: JSON.stringify({
+				newPassword: form.data.password,
+				token: form.data.token
+			})
+		});
 
-			return message(form, "Password reset successful! You can now login.");
-		} catch (error) {
-			if (error instanceof APIError) {
-				if (error.status === 429) {
-					return message(form, "Too many attempts. Try again in 1 hour.", {
-						status: 429
-					});
-				}
-			}
+		if (response.status === 429) {
+			const retryAfter = response.headers.get("X-Retry-After");
+			return message(form, `Too many attempts. Try again in ${retryAfter ?? 3600} seconds.`, {
+				status: 429
+			});
+		}
+
+		if (!response.ok) {
 			return message(form, "Invalid or expired reset link. Please request a new one.", {
 				status: 400
 			});
 		}
+
+		return message(form, "Password reset successful! You can now login.");
 	}
 };
