@@ -15,3 +15,11 @@ export async function generateUniqueUsername(name: string): Promise<string> {
 	const suffix = Date.now().toString(36).slice(-4);
 	return `${base}_${suffix}`;
 }
+
+export function getForwardHeaders(request: Request) {
+	return {
+		"Content-Type": "application/json",
+		"x-forwarded-for": request.headers.get("x-forwarded-for") ?? "",
+		"user-agent": request.headers.get("user-agent") ?? ""
+	};
+}
