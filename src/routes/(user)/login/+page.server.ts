@@ -3,6 +3,7 @@ import { zod4 } from "sveltekit-superforms/adapters";
 import type { PageServerLoad, Actions } from "./$types";
 import { loginSchema } from "$lib/validator/auth-validator";
 import { redirect } from "@sveltejs/kit";
+import { getForwardHeaders } from "$lib/server/utils";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user && locals.user.emailVerified) {
@@ -23,10 +24,7 @@ export const actions: Actions = {
 
 		const response = await fetch("/api/auth/sign-in/email", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
-			},
+			headers: getForwardHeaders(request),
 			body: JSON.stringify({
 				email: form.data.email,
 				password: form.data.password,

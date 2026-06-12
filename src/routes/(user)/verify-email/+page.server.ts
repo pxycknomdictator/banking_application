@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { emailSchema } from "$lib/validator/auth-validator";
 import { superValidate, message } from "sveltekit-superforms";
 import { zod4 } from "sveltekit-superforms/adapters";
+import { getForwardHeaders } from "$lib/server/utils";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = locals.user;
@@ -26,10 +27,7 @@ export const actions: Actions = {
 
 		const response = await fetch("/api/auth/send-verification-email", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
-			},
+			headers: getForwardHeaders(request),
 			body: JSON.stringify({
 				email: user.email || form.data.email,
 				callbackURL: "/verify-email"

@@ -6,6 +6,7 @@ import { db } from "$lib/server/db";
 import { users } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "@sveltejs/kit";
+import { getForwardHeaders } from "$lib/server/utils";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user && locals.user.emailVerified) {
@@ -38,10 +39,7 @@ export const actions: Actions = {
 
 		const response = await fetch("/api/auth/request-password-reset", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"x-forwarded-for": request.headers.get("x-forwarded-for") ?? ""
-			},
+			headers: getForwardHeaders(request),
 			body: JSON.stringify({
 				email: form.data.email,
 				redirectTo: "http://localhost:5173/reset-password"
