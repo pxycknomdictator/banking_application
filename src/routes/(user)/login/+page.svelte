@@ -6,6 +6,8 @@
 	import { superForm } from "sveltekit-superforms";
 	import { zod4Client } from "sveltekit-superforms/adapters";
 
+	import Logo from "$components/Logo.svelte";
+
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
@@ -27,6 +29,17 @@
 </script>
 
 <main>
+	<header class="flex h-20 w-full items-center border border-outline px-16">
+		<nav class="flex w-full items-center justify-between">
+			<Logo />
+			<span>
+				<a
+					class="rounded-lg bg-red-600 px-6 py-2.5 text-[14px] font-semibold tracking-[0.28px] text-white"
+					href={resolve("/signup")}>Get Started</a
+				>
+			</span>
+		</nav>
+	</header>
 	<section>
 		<h1>Login</h1>
 		<form action="?/login" method="post" use:enhance>
