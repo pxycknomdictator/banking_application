@@ -1,3 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
+
+@theme {
+	--color-outline: oklch(92.8% 0.013 255);
+}

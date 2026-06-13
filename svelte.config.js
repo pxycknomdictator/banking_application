@@ -9,6 +9,9 @@ const config = {
 	},
 	kit: {
 		adapter: adapter(),
+		alias: {
+			$components: "./src/components"
+		},
 		typescript: {
 			config: (config) => ({
 				...config,
