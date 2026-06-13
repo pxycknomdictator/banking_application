@@ -6,6 +6,9 @@
 	import { zod4Client } from "sveltekit-superforms/adapters";
 	import { goto } from "$app/navigation";
 
+	import Logo from "$components/Logo.svelte";
+	import LockIcon from "$lib/assets/lock.svg";
+
 	let { data } = $props();
 	const token = page.url.searchParams.get("token");
 
@@ -21,6 +24,14 @@
 </script>
 
 <main>
+	<header class="flex h-20 w-full items-center border border-outline px-16">
+		<nav class="flex w-full items-center justify-between">
+			<Logo />
+			<div>
+				<img src={LockIcon} alt="lock_icon" />
+			</div>
+		</nav>
+	</header>
 	<section>
 		<h1>Reset Your Password</h1>
 		<form action="?/reset_password" method="post" use:enhance>
