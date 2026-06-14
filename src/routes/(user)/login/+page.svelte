@@ -7,6 +7,7 @@
 	import { zod4Client } from "sveltekit-superforms/adapters";
 
 	import Logo from "$components/Logo.svelte";
+	import Footer from "$components/Footer.svelte";
 
 	let { data } = $props();
 
@@ -28,7 +29,7 @@
 	}
 </script>
 
-<main>
+<main class="flex min-h-screen flex-col">
 	<header class="flex h-20 w-full items-center border border-outline px-16">
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
@@ -40,7 +41,7 @@
 			</span>
 		</nav>
 	</header>
-	<section>
+	<section class="flex flex-1">
 		<h1>Login</h1>
 		<form action="?/login" method="post" use:enhance>
 			<div>
@@ -96,4 +97,5 @@
 			</div>
 		</form>
 	</section>
+	<Footer linkTexts={["Privacy Policy", "Ethical Compliance", "Help Center"]} />
 </main>
