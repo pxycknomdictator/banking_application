@@ -42,8 +42,8 @@
 		</nav>
 	</header>
 	<section class="flex flex-1">
-		<h1>Login</h1>
 		<form action="?/login" method="post" use:enhance>
+			<h1>Login</h1>
 			<div>
 				<label for="email">Email Address</label>
 				<div>

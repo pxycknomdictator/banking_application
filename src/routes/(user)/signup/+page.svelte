@@ -42,8 +42,8 @@
 		</nav>
 	</header>
 	<section class="flex flex-1">
-		<h1>Signup</h1>
 		<form action="?/signup" method="post" use:enhance>
+			<h1>Signup</h1>
 			<div>
 				<label for="name">Name</label>
 				<div>
