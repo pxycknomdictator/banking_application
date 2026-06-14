@@ -7,6 +7,6 @@
 		<img src={Wallet} alt="logo" />
 	</div>
 	<div>
-		<span class="text-[18px] font-bold text-red-600 lg:text-xl">Banking Application</span>
+		<span class="text-[16px] font-bold text-red-600 lg:text-xl">Banking Application</span>
 	</div>
 </div>

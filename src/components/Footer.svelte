@@ -6,7 +6,7 @@
 	let { linkTexts }: Props = $props();
 </script>
 
-<footer class="flex h-20 w-full items-center border border-outline px-6 md:px-16">
+<footer class="flex h-20 w-full items-center border border-outline px-4 md:px-16">
 	<div
 		class="flex w-full flex-col justify-center gap-y-1 sm:flex-row sm:justify-between sm:gap-y-0"
 	>
