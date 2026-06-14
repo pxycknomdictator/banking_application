@@ -3,5 +3,17 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--color-outline: oklch(92.8% 0.013 255);
+	--color-primary: hsl(164, 86%, 16%);
+	--color-primary-tint-5: hsla(164, 86%, 16%, 0.05);
+	--color-neutral-lightest: hsl(231, 100%, 99%);
+
+	--color-text-main: hsl(215, 19%, 35%);
+	--color-text-secondary: hsl(215, 16%, 47%);
+	--color-text-muted: hsl(215, 20%, 65%);
+
+	--color-input-bg: hsl(215, 20%, 65%);
+	--color-stroke: hsl(214, 32%, 91%);
+	--color-stroke-30: hsla(214, 32%, 91%, 0.3);
+
+	--shadow-primary-glow: 0px 20px 50px 0px hsla(164, 86%, 16%, 0.3);
 }
