@@ -3,10 +3,10 @@
 </script>
 
 <div class="flex items-center gap-x-1">
-	<div class="rounded-lg bg-red-600 p-2 md:p-2.5">
+	<div class="rounded-lg bg-primary p-2 md:p-2.5">
 		<img src={Wallet} alt="logo" />
 	</div>
 	<div>
-		<span class="text-[16px] font-bold text-red-600 md:text-xl">Banking Application</span>
+		<span class="text-[16px] font-bold text-primary md:text-xl">Banking Application</span>
 	</div>
 </div>

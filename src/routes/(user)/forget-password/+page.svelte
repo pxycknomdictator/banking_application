@@ -17,8 +17,8 @@
 	});
 </script>
 
-<main class="flex min-h-screen flex-col">
-	<header class="flex h-20 w-full items-center border border-outline px-4 md:px-16">
+<main class="flex min-h-screen flex-col bg-neutral-lightest">
+	<header class="flex h-20 w-full items-center border border-stroke-30 bg-white px-4 md:px-16">
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
 			<div>

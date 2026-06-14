@@ -29,13 +29,13 @@
 	}
 </script>
 
-<main class="flex min-h-screen flex-col">
-	<header class="flex h-20 w-full items-center border border-outline px-4 md:px-16">
+<main class="flex min-h-screen flex-col bg-neutral-lightest">
+	<header class="flex h-20 w-full items-center border border-stroke-30 bg-white px-4 md:px-16">
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
 			<span>
 				<a
-					class="rounded-md bg-red-600 px-3 py-1.5 text-[13px] font-semibold tracking-[0.28px] text-white md:rounded-lg md:px-5 md:py-2"
+					class="rounded-md bg-primary px-3 py-1.5 text-[13px] font-semibold tracking-[0.28px] text-white md:rounded-lg md:px-5 md:py-2"
 					href={resolve("/login")}>Login</a
 				>
 			</span>
