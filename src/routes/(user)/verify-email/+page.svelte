@@ -11,7 +11,7 @@
 </script>
 
 <main class="flex min-h-screen flex-col">
-	<header class="flex h-20 w-full items-center border border-outline px-16">
+	<header class="flex h-20 w-full items-center border border-outline px-6 md:px-16">
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
 			<div>
