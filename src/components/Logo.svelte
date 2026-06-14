@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex items-center gap-x-1">
-	<div class="rounded-lg bg-primary p-2 md:p-2.5">
+	<div class="rounded-lg bg-primary p-[9.5px] md:p-2.5">
 		<img src={Wallet} alt="logo" />
 	</div>
 	<div>

@@ -8,6 +8,7 @@
 
 	import Logo from "$components/Logo.svelte";
 	import Footer from "$components/Footer.svelte";
+	import { Button } from "$lib/components/ui/button/index";
 
 	let { data } = $props();
 
@@ -34,10 +35,9 @@
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
 			<span>
-				<a
-					class="rounded-md bg-primary px-3 py-1.5 text-[13px] font-semibold tracking-[0.28px] text-white md:rounded-lg md:px-5 md:py-2"
-					href={resolve("/login")}>Login</a
-				>
+				<a href={resolve("/login")}>
+					<Button class="auth_button">Login</Button>
+				</a>
 			</span>
 		</nav>
 	</header>

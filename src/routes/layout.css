@@ -17,3 +17,7 @@
 
 	--shadow-primary-glow: 0px 20px 50px 0px hsla(164, 86%, 16%, 0.3);
 }
+
+.auth_button {
+	@apply cursor-pointer rounded-md bg-primary px-3.5 text-[11px] font-semibold tracking-[0.28px] text-white hover:bg-primary/95 md:rounded-lg md:text-[13px];
+}
