@@ -2,6 +2,7 @@
 	import { superForm } from "sveltekit-superforms";
 	import Logo from "$components/Logo.svelte";
 	import LockIcon from "$lib/assets/lock.svg";
+	import Footer from "$components/Footer.svelte";
 
 	let { data } = $props();
 
@@ -9,7 +10,7 @@
 	const { enhance } = superForm(data.form);
 </script>
 
-<main>
+<main class="flex min-h-screen flex-col">
 	<header class="flex h-20 w-full items-center border border-outline px-16">
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
@@ -18,9 +19,9 @@
 			</div>
 		</nav>
 	</header>
-	<section>
-		<h1>Check your inbox</h1>
+	<section class="flex flex-1">
 		<div>
+			<h1>Check your inbox</h1>
 			<span>{data.maskedEmail}</span>
 			<p>
 				We've sent a verification link to your email address. Please click the link in the
@@ -38,4 +39,5 @@
 			<p>Didn't get the email? Check your spam folder.</p>
 		</div>
 	</section>
+	<Footer linkTexts={["Privacy Policy", "Shariah Governance", "Support"]} />
 </main>

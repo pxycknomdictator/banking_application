@@ -6,6 +6,7 @@
 
 	import Logo from "$components/Logo.svelte";
 	import LockIcon from "$lib/assets/lock.svg";
+	import Footer from "$components/Footer.svelte";
 
 	let { data } = $props();
 
@@ -16,7 +17,7 @@
 	});
 </script>
 
-<main>
+<main class="flex min-h-screen flex-col">
 	<header class="flex h-20 w-full items-center border border-outline px-16">
 		<nav class="flex w-full items-center justify-between">
 			<Logo />
@@ -25,9 +26,9 @@
 			</div>
 		</nav>
 	</header>
-	<section>
-		<h1>Forgot Password</h1>
+	<section class="flex flex-1">
 		<form action="?/forget_password" method="post" use:enhance>
+			<h1>Forgot Password</h1>
 			<div>
 				<label for="email">Email Address</label>
 				<div>
@@ -50,4 +51,5 @@
 			</div>
 		</form>
 	</section>
+	<Footer linkTexts={["Privacy Policy", "Shariah Governance", "Support"]} />
 </main>
